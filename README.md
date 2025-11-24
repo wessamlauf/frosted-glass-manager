@@ -82,13 +82,10 @@ Everything will revert to the original Frosted Glass color scheme.
 -----
 
 ## 🖼️ **Screenshots** (color picker/custom color/custom background)
+
+![Untitled design (1)](https://github.com/user-attachments/assets/d5d228e9-1051-4785-a804-5cf97b0d3188)
+
 <img alt="image" src="https://github.com/user-attachments/assets/dd595745-66ab-41a1-ae71-cc80967ea838" />
-<img alt="image" src="https://github.com/user-attachments/assets/409d536d-e740-4ece-a056-832d8075ed25" />
-<img alt="image" src="https://github.com/user-attachments/assets/0881c472-a1f0-4bee-9993-5b556efc444e" />
-
-
-
-
 
 ---
 
