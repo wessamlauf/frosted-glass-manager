@@ -8,8 +8,10 @@ CONF_DARK_PRIMARY = "dark_primary_color"
 CONF_DARK_BG = "dark_background_url"
 CONF_RESET = "reset_defaults"
 
-# Predvolené hodnoty z tvojho YAML súboru (RGB formát pre string replace)
-DEFAULT_PRIMARY_RGB = "106, 116, 211" 
+# Rozdelené predvolené hodnoty (aj keď sú v YAML rovnaké, pre kód ich oddelíme)
+DEFAULT_LIGHT_RGB = "106, 116, 211"
+DEFAULT_DARK_RGB = "106, 116, 211"
+
 DEFAULT_LIGHT_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg"
 DEFAULT_DARK_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg"
 
