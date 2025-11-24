@@ -1027,7 +1027,7 @@ Frosted Glass Custom:
 LITE_THEME_TEMPLATE = """# Frosted Glass Lite
 # ver. 1.2.2 - (2025-11-22)
 
-# Frosted Glass Light Lite
+# Frosted Glass Custom Lite
 # ver. 1.2.2 - (2025-11-22)  
 
 Frosted Glass Custom Lite:
