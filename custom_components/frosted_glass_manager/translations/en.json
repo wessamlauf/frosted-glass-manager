@@ -10,14 +10,13 @@
     "options": {
         "step": {
             "init": {
-                "title": "Customize Appearance",
-                "description": "Change the primary accent color and background image for each mode.\n\n**Backgrounds:** Use a URL or local path (/local/image.jpg).\n**Reset:** Check the box at the bottom to restore original theme settings.",
+                "title": "Theme Customization",
+                "description": "Configure colors and background images for Light and Dark modes. \n\nFor backgrounds, enter a full URL (e.g. http...) or a local path (e.g. /local/my-bg.jpg).",
                 "data": {
-                    "light_primary": "Light: Primary Color",
-                    "light_bg": "Light: Background URL",
-                    "dark_primary": "Dark: Primary Color",
-                    "dark_bg": "Dark: Background URL",
-                    "reset_defaults": "⚠️ RESET to Default Settings"
+                    "light_primary": "Light Mode Color",
+                    "light_bg": "Light Background URL",
+                    "dark_primary": "Dark Mode Color",
+                    "dark_bg": "Dark Background URL"
                 }
             }
         }
