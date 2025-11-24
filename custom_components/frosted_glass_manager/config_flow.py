@@ -13,8 +13,8 @@ from .const import (
     CONF_DARK_PRIMARY,
     CONF_DARK_BG,
     CONF_RESET,
-    DEFAULT_LIGHT_RGB, # Zmena nazvu
-    DEFAULT_DARK_RGB,  # Zmena nazvu
+    DEFAULT_LIGHT_RGB,
+    DEFAULT_DARK_RGB,
     DEFAULT_LIGHT_BG_URL,
     DEFAULT_DARK_BG_URL,
 )
@@ -53,6 +53,27 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
+            # === OPRAVA RESET LOGIKY ===
+            # Ak užívateľ zaškrtol Reset, musíme natvrdo prepísať hodnoty v user_input 
+            # na defaultné hodnoty PREDTÝM, než sa uložia.
+            if user_input.get(CONF_RESET):
+                
+                # Pomocná funkcia pre konverziu stringu "R, G, B" na list [R, G, B]
+                def str_to_list(rgb_str):
+                    try:
+                        return [int(x) for x in rgb_str.split(", ")]
+                    except ValueError:
+                        return [106, 116, 211] # Fallback
+
+                # Prepíšeme vstupy na Defaulty
+                user_input[CONF_LIGHT_PRIMARY] = str_to_list(DEFAULT_LIGHT_RGB)
+                user_input[CONF_LIGHT_BG] = DEFAULT_LIGHT_BG_URL
+                user_input[CONF_DARK_PRIMARY] = str_to_list(DEFAULT_DARK_RGB)
+                user_input[CONF_DARK_BG] = DEFAULT_DARK_BG_URL
+                
+                # Dôležité: Resetneme checkbox na False, aby pri ďalšom otvorení nebol zaškrtnutý
+                user_input[CONF_RESET] = False
+
             return self.async_create_entry(title="", data=user_input)
 
         # Helper to handle both string "R, G, B" and list [R, G, B] safely
@@ -68,8 +89,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             return [int(x) for x in default_str.split(", ")]
 
         # Get current values or defaults
-        # .get() returns the stored value (which is a LIST after first save)
-        # or the default (which is a STRING in const.py)
         val_light_prim = self.config_entry.options.get(CONF_LIGHT_PRIMARY, DEFAULT_LIGHT_RGB)
         val_light_bg = self.config_entry.options.get(CONF_LIGHT_BG, DEFAULT_LIGHT_BG_URL)
         val_dark_prim = self.config_entry.options.get(CONF_DARK_PRIMARY, DEFAULT_DARK_RGB)
