@@ -7,13 +7,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
-    DOMAIN, 
-    THEME_TEMPLATE, 
-    THEME_FILENAME, 
-    DEFAULT_LIGHT_RGB, 
-    DEFAULT_DARK_RGB,
-    DEFAULT_LIGHT_BG,
-    DEFAULT_DARK_BG
+    DOMAIN, THEME_TEMPLATE, THEME_FILENAME,
+    DEFAULT_LIGHT_PRIMARY, DEFAULT_LIGHT_TEXT, DEFAULT_LIGHT_BG,
+    DEFAULT_DARK_PRIMARY, DEFAULT_DARK_TEXT, DEFAULT_DARK_BG
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,33 +36,55 @@ async def update_theme_listener(hass: HomeAssistant, entry: ConfigEntry):
 
 async def async_update_theme_file(hass: HomeAssistant, entry: ConfigEntry):
     
-    # Získanie farieb
-    light_rgb_list = entry.options.get("light_primary", DEFAULT_LIGHT_RGB)
-    dark_rgb_list = entry.options.get("dark_primary", DEFAULT_DARK_RGB)
+    # 1. Reset Logic
+    if entry.options.get("reset_defaults", False):
+        _LOGGER.info("Resetting Frosted Glass Theme to Defaults")
+        new_options = {
+            "light_primary": DEFAULT_LIGHT_PRIMARY,
+            "light_bg": DEFAULT_LIGHT_BG,
+            "dark_primary": DEFAULT_DARK_PRIMARY,
+            "dark_bg": DEFAULT_DARK_BG,
+            "reset_defaults": False
+        }
+        hass.config_entries.async_update_entry(entry, options=new_options)
     
-    # Získanie pozadí
+    # 2. Load Values (or Defaults)
+    light_p = entry.options.get("light_primary", DEFAULT_LIGHT_PRIMARY)
     light_bg = entry.options.get("light_bg", DEFAULT_LIGHT_BG)
+    
+    dark_p = entry.options.get("dark_primary", DEFAULT_DARK_PRIMARY)
     dark_bg = entry.options.get("dark_bg", DEFAULT_DARK_BG)
     
-    # Konverzie
-    light_rgb_str = rgb_to_str(light_rgb_list)
-    light_hex = rgb_to_hex(light_rgb_list)
-    dark_rgb_str = rgb_to_str(dark_rgb_list)
-    dark_hex = rgb_to_hex(dark_rgb_list)
+    # Text Colors are Fixed Defaults
+    light_t = DEFAULT_LIGHT_TEXT
+    dark_t = DEFAULT_DARK_TEXT
     
-    _LOGGER.info(f"Updating Theme. Light: {light_hex}, Dark: {dark_hex}")
+    # 3. Conversions
+    lp_str = rgb_to_str(light_p)
+    lp_hex = rgb_to_hex(light_p)
+    lt_str = rgb_to_str(light_t)
+    
+    dp_str = rgb_to_str(dark_p)
+    dp_hex = rgb_to_hex(dark_p)
+    dt_str = rgb_to_str(dark_t)
+    
+    _LOGGER.info(f"Generating Theme... Light: {lp_hex}, Dark: {dp_hex}")
 
-    # Nahrádzanie v šablóne
+    # 4. Replace
     theme_content = THEME_TEMPLATE.replace(
-        "__LIGHT_RGB_STR__", light_rgb_str
+        "__LIGHT_PRIMARY_RGB__", lp_str
     ).replace(
-        "__LIGHT_HEX__", light_hex
+        "__LIGHT_PRIMARY_HEX__", lp_hex
+    ).replace(
+        "__LIGHT_TEXT_RGB__", lt_str
     ).replace(
         "__LIGHT_BG__", light_bg
     ).replace(
-        "__DARK_RGB_STR__", dark_rgb_str
+        "__DARK_PRIMARY_RGB__", dp_str
     ).replace(
-        "__DARK_HEX__", dark_hex
+        "__DARK_PRIMARY_HEX__", dp_hex
+    ).replace(
+        "__DARK_TEXT_RGB__", dt_str
     ).replace(
         "__DARK_BG__", dark_bg
     )
