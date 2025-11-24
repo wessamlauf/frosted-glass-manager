@@ -15,7 +15,7 @@ from .const import (
 )
 
 class FrostedGlassConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow."""
+    """Handle a config flow for Frosted Glass Manager."""
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
@@ -39,7 +39,6 @@ class FrostedGlassOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
-        # Load current settings or use defaults
         current_light_p = self.config_entry.options.get("light_primary", DEFAULT_LIGHT_PRIMARY)
         current_light_bg = self.config_entry.options.get("light_bg", DEFAULT_LIGHT_BG)
         
