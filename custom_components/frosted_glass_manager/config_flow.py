@@ -1,5 +1,6 @@
 """Config flow for Frosted Glass Theme Manager integration."""
 import voluptuous as vol
+import logging
 
 from homeassistant import config_entries
 from homeassistant.core import callback
@@ -12,11 +13,13 @@ from .const import (
     CONF_DARK_PRIMARY,
     CONF_DARK_BG,
     CONF_RESET,
-    DEFAULT_PRIMARY_RGB,
+    DEFAULT_LIGHT_RGB, # Zmena nazvu
+    DEFAULT_DARK_RGB,  # Zmena nazvu
     DEFAULT_LIGHT_BG_URL,
     DEFAULT_DARK_BG_URL,
 )
 
+_LOGGER = logging.getLogger(__name__)
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Frosted Glass Theme Manager."""
@@ -52,18 +55,25 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
-        # Helper to convert "R, G, B" string to [R, G, B] list for the selector
-        def str_rgb_to_list(rgb_str):
-            try:
-                return [int(x) for x in rgb_str.split(", ")]
-            except ValueError:
-                return [106, 116, 211] # Default fallback
+        # Helper to handle both string "R, G, B" and list [R, G, B] safely
+        def ensure_rgb_list(rgb_val, default_str):
+            if isinstance(rgb_val, list) or isinstance(rgb_val, tuple):
+                return list(rgb_val)
+            if isinstance(rgb_val, str):
+                try:
+                    return [int(x) for x in rgb_val.split(", ")]
+                except ValueError:
+                    pass
+            # Fallback to default constant
+            return [int(x) for x in default_str.split(", ")]
 
         # Get current values or defaults
-        current_light_primary = self.config_entry.options.get(CONF_LIGHT_PRIMARY, DEFAULT_PRIMARY_RGB)
-        current_light_bg = self.config_entry.options.get(CONF_LIGHT_BG, DEFAULT_LIGHT_BG_URL)
-        current_dark_primary = self.config_entry.options.get(CONF_DARK_PRIMARY, DEFAULT_PRIMARY_RGB)
-        current_dark_bg = self.config_entry.options.get(CONF_DARK_BG, DEFAULT_DARK_BG_URL)
+        # .get() returns the stored value (which is a LIST after first save)
+        # or the default (which is a STRING in const.py)
+        val_light_prim = self.config_entry.options.get(CONF_LIGHT_PRIMARY, DEFAULT_LIGHT_RGB)
+        val_light_bg = self.config_entry.options.get(CONF_LIGHT_BG, DEFAULT_LIGHT_BG_URL)
+        val_dark_prim = self.config_entry.options.get(CONF_DARK_PRIMARY, DEFAULT_DARK_RGB)
+        val_dark_bg = self.config_entry.options.get(CONF_DARK_BG, DEFAULT_DARK_BG_URL)
 
         schema = vol.Schema(
             {
@@ -71,22 +81,22 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 
                 vol.Required(
                     CONF_LIGHT_PRIMARY,
-                    default=str_rgb_to_list(current_light_primary)
+                    default=ensure_rgb_list(val_light_prim, DEFAULT_LIGHT_RGB)
                 ): selector.ColorRGBSelector(),
                 
                 vol.Required(
                     CONF_LIGHT_BG,
-                    default=current_light_bg
+                    default=val_light_bg
                 ): selector.TextSelector(),
                 
                 vol.Required(
                     CONF_DARK_PRIMARY,
-                    default=str_rgb_to_list(current_dark_primary)
+                    default=ensure_rgb_list(val_dark_prim, DEFAULT_DARK_RGB)
                 ): selector.ColorRGBSelector(),
                 
                 vol.Required(
                     CONF_DARK_BG,
-                    default=current_dark_bg
+                    default=val_dark_bg
                 ): selector.TextSelector(),
             }
         )
