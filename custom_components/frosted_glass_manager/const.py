@@ -8,9 +8,23 @@ CONF_DARK_PRIMARY = "dark_primary_color"
 CONF_DARK_BG = "dark_background_url"
 CONF_RESET = "reset_defaults"
 
-# Tieto hodnoty musia PRESNE sedieť s tým, čo je v texte nižšie, aby ich script našiel
+# Predvolené RGB
 DEFAULT_LIGHT_RGB = "106, 116, 211"
 DEFAULT_DARK_RGB = "106, 116, 211"
+
+DEFAULT_PALETTE = {
+    "05": "#0D0E19",
+    "10": "#131526",
+    "20": "#20233F",
+    "30": "#30345F",
+    "40": "#40467F",
+    "50": "#6A74D3", # Toto je ekvivalent k 106, 116, 211
+    "60": "#8F97DE",
+    "70": "#ADB3E7",
+    "80": "#D2D5F2",
+    "90": "#EAECF9",
+    "95": "#F6F7FC",
+}
 
 DEFAULT_LIGHT_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg"
 DEFAULT_DARK_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg"
