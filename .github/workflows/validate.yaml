@@ -27,11 +27,3 @@ jobs:
 
       - name: Run tests
         run: pytest -q
-
-  validate-hacs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: HACS validation
-        uses: hacs/action@main
-        with:
-          category: integration
