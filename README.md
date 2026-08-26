@@ -20,6 +20,9 @@
     1.  **Frosted Glass Custom**: The full experience with blur and glass effects. ❄️
     2.  **Frosted Glass Custom Lite**: A performance-optimized version for older devices (no blur). ⚡
 - **Instant Updates**: Changes are applied immediately without needing to restart Home Assistant. 🚀
+- **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
+- **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
+- **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
 ---
 
@@ -27,7 +30,11 @@
 
 **Step 1: Prerequisites**
 - You must have [HACS](https://hacs.xyz/) installed.
-- You must have the [`card-mod`](https://github.com/thomasloven/lovelace-card-mod) integration installed (required for the glass effects to work).
+- Install exactly one styling engine through HACS:
+  - [`UIX`](https://github.com/Lint-Free-Technology/uix), the actively developed successor to card-mod. It supports the existing card-mod theme keys used here.
+  - [`card-mod`](https://github.com/thomasloven/lovelace-card-mod), if you prefer to keep your current setup.
+
+Do not install both engines at the same time.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.
@@ -62,11 +69,11 @@ Once installed and restarted, you need to add the integration to your instance:
     * **Dark Mode Background URL**
 3. Click **SUBMIT**.
 
-The integration will automatically generate two new files in your `themes/` folder: `Frosted Glass Custom.yaml` and `Frosted Glass Custom Lite.yaml`.
+The integration automatically and atomically generates two files in your `themes/` folder: `Frosted Glass Custom.yaml` and `Frosted Glass Custom Lite.yaml`. Each file also contains its required light and dark engine themes, so no second theme package is needed.
 
 ### Activating the Theme:
 1. Go to your **Profile** (click your name in the bottom-left corner).
-2. Under **Theme**, select either **Frosted Glass Custom** or **Frosted Glass Custom Lite**.
+2. Under **Theme**, select **Frosted Glass Custom** or **Frosted Glass Custom Lite**. The generated single-mode variants are also available when you want to force light or dark mode.
 
 ---
 
