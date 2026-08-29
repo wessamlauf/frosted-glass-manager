@@ -18,6 +18,8 @@ This branch is a private technical experiment for using the Frosted Glass Manage
 - Generated theme names changed to:
   - `Frosted Glass UIX Custom`
   - `Frosted Glass UIX Custom Lite`
+- Default background images are bundled and copied to `config/www/frosted-glass-uix/`.
+- Default background URLs now use `/local/frosted-glass-uix/...` instead of the upstream CDN.
 - Theme template keys were mapped from card-mod naming to UIX naming:
   - `card-mod-theme` -> `uix-theme`
   - `card-mod-card` -> `uix-card`

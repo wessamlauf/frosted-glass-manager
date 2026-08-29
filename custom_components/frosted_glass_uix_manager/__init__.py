@@ -2,6 +2,7 @@
 import os
 import logging
 import colorsys
+import shutil
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -17,6 +18,11 @@ from .const import (
     DEFAULT_DARK_RGB,
     DEFAULT_LIGHT_BG_URL,
     DEFAULT_DARK_BG_URL,
+    LEGACY_LIGHT_BG_URL,
+    LEGACY_DARK_BG_URL,
+    BACKGROUND_ASSET_DIR,
+    LIGHT_BACKGROUND_FILENAME,
+    DARK_BACKGROUND_FILENAME,
     DEFAULT_PALETTE,
     THEME_TEMPLATE,
     THEME_FILENAME,
@@ -25,6 +31,11 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+BACKGROUND_FILENAMES = (
+    LIGHT_BACKGROUND_FILENAME,
+    DARK_BACKGROUND_FILENAME,
+)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Frosted Glass UIX Theme Manager from a config entry."""
@@ -67,6 +78,7 @@ def generate_hex_palette(rgb_str):
 def generate_theme_file(hass: HomeAssistant, entry: ConfigEntry):
     """Generate both theme YAML files based on options."""
     options = entry.options
+    copy_background_assets(hass)
 
     # Defaults
     def_light_rgb = DEFAULT_LIGHT_RGB
@@ -86,9 +98,17 @@ def generate_theme_file(hass: HomeAssistant, entry: ConfigEntry):
             return val 
 
         new_light_primary = get_rgb_string(CONF_LIGHT_PRIMARY, def_light_rgb)
-        new_light_bg = options.get(CONF_LIGHT_BG, DEFAULT_LIGHT_BG_URL)
+        new_light_bg = normalize_background_url(
+            options.get(CONF_LIGHT_BG, DEFAULT_LIGHT_BG_URL),
+            DEFAULT_LIGHT_BG_URL,
+            LEGACY_LIGHT_BG_URL,
+        )
         new_dark_primary = get_rgb_string(CONF_DARK_PRIMARY, def_dark_rgb)
-        new_dark_bg = options.get(CONF_DARK_BG, DEFAULT_DARK_BG_URL)
+        new_dark_bg = normalize_background_url(
+            options.get(CONF_DARK_BG, DEFAULT_DARK_BG_URL),
+            DEFAULT_DARK_BG_URL,
+            LEGACY_DARK_BG_URL,
+        )
 
     # Generate Hex Palettes
     light_palette = generate_hex_palette(new_light_primary)
@@ -154,6 +174,35 @@ def generate_theme_file(hass: HomeAssistant, entry: ConfigEntry):
     
     # 2. Generate Lite Theme
     create_theme_file(LITE_THEME_TEMPLATE, LITE_THEME_FILENAME)
+
+
+def normalize_background_url(value, default_url, legacy_url):
+    """Use local bundled backgrounds when the old CDN default is still stored."""
+    if not value or value == legacy_url:
+        return default_url
+    return value
+
+
+def copy_background_assets(hass: HomeAssistant):
+    """Copy bundled background images to Home Assistant's /local/ folder."""
+    source_dir = os.path.join(os.path.dirname(__file__), "assets")
+    target_dir = hass.config.path("www", BACKGROUND_ASSET_DIR)
+
+    try:
+        os.makedirs(target_dir, exist_ok=True)
+
+        for filename in BACKGROUND_FILENAMES:
+            source_path = os.path.join(source_dir, filename)
+            target_path = os.path.join(target_dir, filename)
+
+            if not os.path.isfile(source_path):
+                _LOGGER.warning("Bundled Frosted Glass background missing: %s", source_path)
+                continue
+
+            shutil.copy2(source_path, target_path)
+
+    except Exception as err:
+        _LOGGER.error("Frosted Glass Manager: Error copying background assets: %s", err)
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""

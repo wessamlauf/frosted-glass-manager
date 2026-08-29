@@ -8,6 +8,13 @@ CONF_DARK_PRIMARY = "dark_primary_color"
 CONF_DARK_BG = "dark_background_url"
 CONF_RESET = "reset_defaults"
 
+BACKGROUND_ASSET_DIR = "frosted-glass-uix"
+LIGHT_BACKGROUND_FILENAME = "frosted-glass-light-background.jpg"
+DARK_BACKGROUND_FILENAME = "frosted-glass-dark-background.jpg"
+LOCAL_BACKGROUND_BASE_URL = f"/local/{BACKGROUND_ASSET_DIR}"
+LEGACY_LIGHT_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg"
+LEGACY_DARK_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg"
+
 # Predvolené RGB
 DEFAULT_LIGHT_RGB = "106, 116, 211"
 DEFAULT_DARK_RGB = "106, 116, 211"
@@ -26,8 +33,8 @@ DEFAULT_PALETTE = {
     "95": "#F6F7FC",
 }
 
-DEFAULT_LIGHT_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg"
-DEFAULT_DARK_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg"
+DEFAULT_LIGHT_BG_URL = f"{LOCAL_BACKGROUND_BASE_URL}/{LIGHT_BACKGROUND_FILENAME}"
+DEFAULT_DARK_BG_URL = f"{LOCAL_BACKGROUND_BASE_URL}/{DARK_BACKGROUND_FILENAME}"
 
 THEME_FILENAME = "Frosted Glass UIX Custom.yaml"
 LITE_THEME_FILENAME = "Frosted Glass UIX Custom Lite.yaml"
@@ -462,7 +469,7 @@ Frosted Glass UIX Custom:
       success-color: 'rgb(118, 214, 152)'
       warning-color: 'rgb(255, 219, 117)'
       error-color: 'rgb(234, 114, 135)'
-      background-image: "center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg')"
+      background-image: "center / cover no-repeat fixed url('/local/frosted-glass-uix/frosted-glass-light-background.jpg')"
       lovelace-background: var(--background-image)
       primary-background-color: 'rgba(254, 244, 242, 1)'
       secondary-background-color: 'rgba(245, 245, 245, 0.5)'
@@ -954,7 +961,7 @@ Frosted Glass UIX Custom:
       success-color: 'rgb(118, 214, 152)'
       warning-color: 'rgb(255, 219, 117)'
       error-color: 'rgb(234, 114, 135)'
-      background-image: "center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg')"
+      background-image: "center / cover no-repeat fixed url('/local/frosted-glass-uix/frosted-glass-dark-background.jpg')"
       lovelace-background: 'var(--background-image)'
       primary-background-color: 'rgba(30, 30, 30, 1)'                                                        # 1.2 change - improved background color for a darker feel 
       secondary-background-color: 'rgba(30, 33, 54, 0.6)'
@@ -1441,7 +1448,7 @@ Frosted Glass UIX Custom Lite:
       success-color: 'rgb(118, 214, 152)'
       warning-color: 'rgb(255, 219, 117)'
       error-color: 'rgb(234, 114, 135)'
-      background-image: "center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg')"
+      background-image: "center / cover no-repeat fixed url('/local/frosted-glass-uix/frosted-glass-light-background.jpg')"
       lovelace-background: var(--background-image)
       primary-background-color: 'rgba(254, 244, 242, 1)'
       secondary-background-color: 'rgba(245, 245, 245, 0.5)'
@@ -1909,7 +1916,7 @@ Frosted Glass UIX Custom Lite:
       success-color: 'rgb(118, 214, 152)'
       warning-color: 'rgb(255, 219, 117)'
       error-color: 'rgb(234, 114, 135)'
-      background-image: "center / cover no-repeat fixed url('https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg')"
+      background-image: "center / cover no-repeat fixed url('/local/frosted-glass-uix/frosted-glass-dark-background.jpg')"
       lovelace-background: 'var(--background-image)'
       primary-background-color: 'rgba(30, 30, 30, 1)'                                      # 1.2 change - improved background color for a darker feel 
       secondary-background-color: 'rgba(30, 33, 54, 0.6)'

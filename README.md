@@ -22,6 +22,7 @@ Original projects:
 - **UI Color Picker**: Change the **Primary Color** for both Light and Dark modes using a visual picker. No more editing code! 🎨
 - **Smart Tonal Palette**: This isn't just a simple color swap. The manager mathematically calculates a complete **Material Design tonal palette** (shades 05–95) based on your chosen color. This ensures text remains readable and contrast stays perfect. 🧠
 - **Custom Backgrounds**: Easily paste a URL for your custom background images. 🖼️
+- **Bundled Backgrounds**: The default light and dark backgrounds are copied locally to Home Assistant's `/local/frosted-glass-uix/` path.
 - **Dual Generation**: With a single click, the manager generates two themes:
     1.  **Frosted Glass UIX Custom**: The full UIX experiment with blur and glass effects.
     2.  **Frosted Glass UIX Custom Lite**: A performance-optimized UIX experiment for older devices.
@@ -69,6 +70,16 @@ Once installed and restarted, you need to add the integration to your instance:
 3. Click **SUBMIT**.
 
 The integration will automatically generate two new files in your `themes/` folder: `Frosted Glass UIX Custom.yaml` and `Frosted Glass UIX Custom Lite.yaml`.
+
+The bundled default backgrounds are copied to:
+
+- `config/www/frosted-glass-uix/frosted-glass-light-background.jpg`
+- `config/www/frosted-glass-uix/frosted-glass-dark-background.jpg`
+
+The generated theme uses these local URLs by default:
+
+- `/local/frosted-glass-uix/frosted-glass-light-background.jpg`
+- `/local/frosted-glass-uix/frosted-glass-dark-background.jpg`
 
 ### Activating the Theme:
 1. Go to your **Profile** (click your name in the bottom-left corner).
