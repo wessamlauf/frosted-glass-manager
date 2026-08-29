@@ -1,4 +1,4 @@
-"""Config flow for Frosted Glass Theme Manager integration."""
+"""Config flow for Frosted Glass UIX Theme Manager integration."""
 import voluptuous as vol
 import logging
 
@@ -22,7 +22,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Frosted Glass Theme Manager."""
+    """Handle a config flow for Frosted Glass UIX Theme Manager."""
 
     VERSION = 1
 
@@ -32,7 +32,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            return self.async_create_entry(title="Frosted Glass Manager", data={})
+            return self.async_create_entry(title="Frosted Glass UIX Manager", data={})
 
         return self.async_show_form(step_id="user")
 

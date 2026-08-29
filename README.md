@@ -1,24 +1,33 @@
-# Frosted Glass Theme Manager 🎨
+# Frosted Glass UIX Theme Manager
 
 [![HACS Badge](https://img.shields.io/badge/HACS-Custom-41BDF5?logo=home-assistant&logoColor=white)](https://github.com/hacs/integration)
 [![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg)](https://www.home-assistant.io/)
 [![Maintainer](https://img.shields.io/badge/maintainer-wessamlauf-blue)](https://github.com/wessamlauf)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-☕-orange?logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/wessamlauf)
 
+[![Open your Home Assistant instance and add this repository to HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rockbaer2007&repository=frosted-glass-manager&category=integration)
+
 <img alt="Frosted Glass Manager logo" src="https://github.com/user-attachments/assets/f1fd71d5-f5bb-451e-862c-cc668d987f66" />
 
-### Customize your Frosted Glass experience without touching a single line of YAML. 🛠️
+### Private UIX experiment based on Frosted Glass Theme Manager.
 
-**Frosted Glass Theme Manager** is a powerful companion integration for Home Assistant. It allows you to easily customize the popular Frosted Glass aesthetic directly from the UI. Change colors, switch backgrounds, and generate optimized theme files instantly.
+**Frosted Glass UIX Theme Manager** is a local test branch that explores whether the Frosted Glass Manager concept can generate themes for UIX instead of card-mod.
+
+This branch is not an official upstream release. The upstream manager repository currently has no recognized license in GitHub metadata, so keep this branch private/local unless permission or a clear upstream license is available.
+
+Original projects:
+- Frosted Glass Theme Manager: https://github.com/wessamlauf/frosted-glass-manager
+- Frosted Glass Themes: https://github.com/wessamlauf/homeassistant-frosted-glass-themes
 
 ## ✨ Features
 
 - **UI Color Picker**: Change the **Primary Color** for both Light and Dark modes using a visual picker. No more editing code! 🎨
 - **Smart Tonal Palette**: This isn't just a simple color swap. The manager mathematically calculates a complete **Material Design tonal palette** (shades 05–95) based on your chosen color. This ensures text remains readable and contrast stays perfect. 🧠
 - **Custom Backgrounds**: Easily paste a URL for your custom background images. 🖼️
+- **Bundled Backgrounds**: The default light and dark backgrounds are copied locally to Home Assistant's `/local/frosted-glass-uix/` path.
 - **Dual Generation**: With a single click, the manager generates two themes:
-    1.  **Frosted Glass Custom**: The full experience with blur and glass effects. ❄️
-    2.  **Frosted Glass Custom Lite**: A performance-optimized version for older devices (no blur). ⚡
+    1.  **Frosted Glass UIX Custom**: The full UIX experiment with blur and glass effects.
+    2.  **Frosted Glass UIX Custom Lite**: A performance-optimized UIX experiment for older devices.
 - **Instant Updates**: Changes are applied immediately without needing to restart Home Assistant. 🚀
 
 ---
@@ -27,19 +36,19 @@
 
 **Step 1: Prerequisites**
 - You must have [HACS](https://hacs.xyz/) installed.
-- You must have the [`card-mod`](https://github.com/thomasloven/lovelace-card-mod) integration installed (required for the glass effects to work).
+- You must have UIX installed and loaded in Home Assistant.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.
 2. Click the menu (three dots) in the top right -> **Custom repositories**.
-3. Paste this repository URL: `https://github.com/wessamlauf/frosted-glass-manager`
+3. Paste this repository URL: `https://github.com/rockbaer2007/frosted-glass-manager`
 4. Select Category: **Integration**.
-5. Click **Add**, then find **Frosted Glass Theme Manager** in the list and install it.
+5. Click **Add**, then find **Frosted Glass UIX Theme Manager** in the list and install it.
 6. **Restart Home Assistant.**
 
 **Step 3: Install Manually (Alternative)**
 1. Download this repository.
-2. Copy the `custom_components/frosted_glass_manager` folder into your `config/custom_components/` directory.
+2. Copy the `custom_components/frosted_glass_uix_manager` folder into your `config/custom_components/` directory.
 3. Restart Home Assistant.
 
 ---
@@ -50,7 +59,7 @@ Once installed and restarted, you need to add the integration to your instance:
 
 1. Go to **Settings** -> **Devices & Services**.
 2. Click **Add Integration** (bottom right).
-3. Search for **"Frosted Glass Theme Manager"**.
+3. Search for **"Frosted Glass UIX Theme Manager"**.
 4. Finish the setup.
 
 ### How to Customize:
@@ -62,11 +71,21 @@ Once installed and restarted, you need to add the integration to your instance:
     * **Dark Mode Background URL**
 3. Click **SUBMIT**.
 
-The integration will automatically generate two new files in your `themes/` folder: `Frosted Glass Custom.yaml` and `Frosted Glass Custom Lite.yaml`.
+The integration will automatically generate two new files in your `themes/` folder: `Frosted Glass UIX Custom.yaml` and `Frosted Glass UIX Custom Lite.yaml`.
+
+The bundled default backgrounds are copied to:
+
+- `config/www/frosted-glass-uix/frosted-glass-light-background.jpg`
+- `config/www/frosted-glass-uix/frosted-glass-dark-background.jpg`
+
+The generated theme uses these local URLs by default:
+
+- `/local/frosted-glass-uix/frosted-glass-light-background.jpg`
+- `/local/frosted-glass-uix/frosted-glass-dark-background.jpg`
 
 ### Activating the Theme:
 1. Go to your **Profile** (click your name in the bottom-left corner).
-2. Under **Theme**, select either **Frosted Glass Custom** or **Frosted Glass Custom Lite**.
+2. Under **Theme**, select either **Frosted Glass UIX Custom** or **Frosted Glass UIX Custom Lite**.
 
 ---
 
@@ -98,7 +117,9 @@ If this tool helped you make your dashboard beautiful and saved you time, consid
 
 ## 🐞 Issues / Feedback
 
-Found a bug or have a suggestion?  
+Found a bug or have a suggestion in the original manager?
 Open an [issue](https://github.com/wessamlauf/frosted-glass-manager/issues) on GitHub.
+
+For this UIX experiment, validate locally first before opening upstream issues.
 
 *This integration is based on the visual design of the [Frosted Glass Themes](https://github.com/wessamlauf/homeassistant-frosted-glass-themes).*

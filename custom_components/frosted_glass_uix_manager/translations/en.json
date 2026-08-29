@@ -2,12 +2,12 @@
     "config": {
         "step": {
             "user": {
-                "title": "Frosted Glass Theme Manager",
-                "description": "Click Submit to set up the Theme Manager."
+                "title": "Frosted Glass UIX Theme Manager",
+                "description": "Click Submit to set up the UIX Theme Manager."
             }
         },
         "abort": {
-            "single_instance_allowed": "Only one instance of Frosted Glass Manager is allowed."
+            "single_instance_allowed": "Only one instance of Frosted Glass UIX Manager is allowed."
         }
     },
     "options": {
