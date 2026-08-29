@@ -5,6 +5,8 @@
 [![Maintainer](https://img.shields.io/badge/maintainer-wessamlauf-blue)](https://github.com/wessamlauf)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-☕-orange?logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/wessamlauf)
 
+[![Open your Home Assistant instance and add this repository to HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rockbaer2007&repository=frosted-glass-manager&category=integration)
+
 <img alt="Frosted Glass Manager logo" src="https://github.com/user-attachments/assets/f1fd71d5-f5bb-451e-862c-cc668d987f66" />
 
 ### Private UIX experiment based on Frosted Glass Theme Manager.
@@ -39,7 +41,7 @@ Original projects:
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.
 2. Click the menu (three dots) in the top right -> **Custom repositories**.
-3. Paste your private fork repository URL.
+3. Paste this repository URL: `https://github.com/rockbaer2007/frosted-glass-manager`
 4. Select Category: **Integration**.
 5. Click **Add**, then find **Frosted Glass UIX Theme Manager** in the list and install it.
 6. **Restart Home Assistant.**
