@@ -1,6 +1,6 @@
-"""Constants for the Frosted Glass Theme Manager integration."""
+"""Constants for the Frosted Glass UIX Theme Manager integration."""
 
-DOMAIN = "frosted_glass_manager"
+DOMAIN = "frosted_glass_uix_manager"
 
 CONF_LIGHT_PRIMARY = "light_primary_color"
 CONF_LIGHT_BG = "light_background_url"
@@ -29,17 +29,17 @@ DEFAULT_PALETTE = {
 DEFAULT_LIGHT_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-light-background.jpg"
 DEFAULT_DARK_BG_URL = "https://cdn.jsdelivr.net/gh/wessamlauf/homeassistant-frosted-glass-themes@refs/heads/main/themes/frosted-glass-dark-background.jpg"
 
-THEME_FILENAME = "Frosted Glass Custom.yaml"
-LITE_THEME_FILENAME = "Frosted Glass Custom Lite.yaml"
+THEME_FILENAME = "Frosted Glass UIX Custom.yaml"
+LITE_THEME_FILENAME = "Frosted Glass UIX Custom Lite.yaml"
 # ==============================================================================
 # 1. FULL THEME TEMPLATE
 # ==============================================================================
 THEME_TEMPLATE = """# Frosted Glass
 
-Frosted Glass Custom:
+Frosted Glass UIX Custom:
   modes:
     light:
-      card-mod-theme: "Frosted Glass Light"
+      uix-theme: "Frosted Glass UIX Custom"
 
       # =========================
       # HEADER (Top Bar)
@@ -70,9 +70,9 @@ Frosted Glass Custom:
       mdc-dialog-scrim-color: 'rgba(0, 0, 0, 0.6)'
 
       # =========================
-      # CARDS / CARD-MOD
+      # CARDS / UIX
       # =========================
-      card-mod-card: |
+      uix-card: |
         /* Base reset */
         ha-card {
           background: transparent;
@@ -175,9 +175,9 @@ Frosted Glass Custom:
         }
 
       # =========================
-      # CARD-MOD-ROOT GLOBAL CSS
+      # UIX-ROOT GLOBAL CSS
       # =========================
-      card-mod-root: |
+      uix-root: |
        :host {
         --ha-card-background: rgba(242, 245, 255, 0.1);
         --ha-card-box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
@@ -530,7 +530,7 @@ Frosted Glass Custom:
       border-radius: '18px'
 
     dark:
-      card-mod-theme: 'Frosted Glass Dark'
+      uix-theme: 'Frosted Glass UIX Custom'
 
       # =========================
       # HEADER (Top Bar)
@@ -561,9 +561,9 @@ Frosted Glass Custom:
       mdc-dialog-scrim-color: 'rgba(0, 0, 0, 0.8)'
 
       # =========================
-      # CARDS / CARD-MOD
+      # CARDS / UIX
       # =========================
-      card-mod-card: |
+      uix-card: |
         /* Base reset */
         ha-card {
           background: transparent;
@@ -666,9 +666,9 @@ Frosted Glass Custom:
         }
 
       # =========================
-      # CARD-MOD-ROOT GLOBAL CSS
+      # UIX-ROOT GLOBAL CSS
       # =========================
-      card-mod-root: |
+      uix-root: |
         :host {
           --ha-card-background: rgba(30, 30, 30, 0.1);
           --ha-card-box-shadow: 0 12px 20px rgba(0, 0, 0, 0.28);
@@ -1030,13 +1030,13 @@ Frosted Glass Custom:
 LITE_THEME_TEMPLATE = """# Frosted Glass Lite
 # ver. 1.2.2 - (2025-11-22)
 
-# Frosted Glass Custom Lite
+# Frosted Glass UIX Custom Lite
 # ver. 1.2.2 - (2025-11-22)  
 
-Frosted Glass Custom Lite:
+Frosted Glass UIX Custom Lite:
   modes:
     light:
-      card-mod-theme: "Frosted Glass Light Lite"
+      uix-theme: "Frosted Glass UIX Custom Lite"
 
       # =========================
       # HEADER (Top Bar)
@@ -1056,7 +1056,7 @@ Frosted Glass Custom Lite:
       sidebar-selected-icon-color: 'rgba(19, 21, 54, 0.95)'
       sidebar-selected-text-color: 'rgba(19, 21, 54, 0.98)'
 
-      # Sidebar blur (card-mod-root section at end handles blur effect!)
+      # Sidebar blur (UIX-root section at end handles blur effect!)
 
       # =========================
       # DIALOGS
@@ -1067,9 +1067,9 @@ Frosted Glass Custom Lite:
       mdc-dialog-scrim-color: 'rgba(0, 0, 0, 0.9)'
 
       # =========================
-      # CARDS / CARD-MOD
+      # CARDS / UIX
       # =========================
-      card-mod-card: |
+      uix-card: |
         /* Base reset */
         ha-card {
           background: transparent;
@@ -1156,9 +1156,9 @@ Frosted Glass Custom Lite:
         }
 
       # =========================
-      # CARD-MOD-ROOT GLOBAL CSS
+      # UIX-ROOT GLOBAL CSS
       # =========================
-      card-mod-root: |
+      uix-root: |
        :host {
         --ha-card-background: rgba(242, 245, 255, 0.1);
         --ha-card-box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
@@ -1509,7 +1509,7 @@ Frosted Glass Custom Lite:
       border-radius: '18px'
 
     dark:
-      card-mod-theme: 'Frosted Glass Dark Lite'
+      uix-theme: 'Frosted Glass UIX Custom Lite'
 
       # =========================
       # HEADER (Top Bar)
@@ -1538,9 +1538,9 @@ Frosted Glass Custom Lite:
       mdc-dialog-scrim-color: 'rgba(0, 0, 0, 0.9)'
 
       # =========================
-      # CARDS / CARD-MOD
+      # CARDS / UIX
       # =========================
-      card-mod-card: |
+      uix-card: |
         /* Base reset */
         ha-card {
           background: transparent;
@@ -1628,9 +1628,9 @@ Frosted Glass Custom Lite:
         /* (Removed) .bubble-button-card-container styling to avoid conflicts               # 1.2 Glass – matches Light exclusions */
 
       # =========================
-      # CARD-MOD-ROOT GLOBAL CSS
+      # UIX-ROOT GLOBAL CSS
       # =========================
-      card-mod-root: |
+      uix-root: |
         :host {
           --ha-card-background: rgba(30, 30, 30, 0.1);
           --ha-card-box-shadow: 0 12px 20px rgba(0, 0, 0, 0.28);
@@ -1977,5 +1977,4 @@ Frosted Glass Custom Lite:
       border-radius: '18px'
 
       # --- End of Theme """
-
 

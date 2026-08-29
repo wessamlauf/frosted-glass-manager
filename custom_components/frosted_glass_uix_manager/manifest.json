@@ -1,6 +1,6 @@
 {
-  "domain": "frosted_glass_manager",
-  "name": "Frosted Glass Theme Manager",
+  "domain": "frosted_glass_uix_manager",
+  "name": "Frosted Glass UIX Theme Manager",
   "codeowners": ["@wessamlauf"],
   "config_flow": true,
   "documentation": "https://github.com/wessamlauf/frosted-glass-manager",

@@ -1,4 +1,4 @@
-"""The Frosted Glass Theme Manager integration."""
+"""The Frosted Glass UIX Theme Manager integration."""
 import os
 import logging
 import colorsys
@@ -27,7 +27,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Frosted Glass Theme Manager from a config entry."""
+    """Set up Frosted Glass UIX Theme Manager from a config entry."""
     entry.async_on_unload(entry.add_update_listener(update_listener))
     await hass.async_add_executor_job(generate_theme_file, hass, entry)
     return True
