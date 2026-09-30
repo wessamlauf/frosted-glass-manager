@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import colorsys
 import importlib.util
 import re
 import sys
@@ -34,6 +35,34 @@ def test_normalize_rgb_rejects_malformed_and_out_of_range_values() -> None:
     assert GENERATOR.normalize_rgb([4, 5, 6]) == "4, 5, 6"
     assert GENERATOR.normalize_rgb("256, 0, 0") == GENERATOR.DEFAULT_LIGHT_RGB
     assert GENERATOR.normalize_rgb("1, 2") == GENERATOR.DEFAULT_LIGHT_RGB
+
+
+def test_tonal_palette_preserves_primary_and_increases_in_lightness() -> None:
+    for rgb in ("122, 162, 190", "106, 116, 211", "230, 240, 250", "12, 34, 56"):
+        palette = GENERATOR.generate_hex_palette(rgb)
+        channels = [int(channel) for channel in rgb.split(", ")]
+        assert palette["50"] == "#{:02X}{:02X}{:02X}".format(*channels)
+        lightness = []
+        for value in palette.values():
+            red, green, blue = (int(value[i : i + 2], 16) / 255 for i in (1, 3, 5))
+            lightness.append(colorsys.rgb_to_hls(red, green, blue)[1])
+        assert lightness == sorted(lightness)
+
+
+def test_defaults_preserve_the_template_palette_in_both_modes() -> None:
+    for filename in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
+        template = _template(filename)
+        source = next(iter(yaml.safe_load(template).values()))
+        rendered = next(
+            iter(
+                yaml.safe_load(
+                    GENERATOR.render_theme(template, GENERATOR.ThemeSettings())
+                ).values()
+            )
+        )
+        for mode in ("light", "dark"):
+            assert rendered["modes"][mode] == source["modes"][mode]
+        assert rendered["modes"]["dark"]["primary-background-color"] == "rgb(2, 6, 11)"
 
 
 def test_rendered_full_theme_is_self_contained() -> None:
@@ -106,9 +135,13 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         assert engine["ha-card-background"] == "transparent"
         assert engine["bubble-main-background-color"] == "transparent"
         assert engine["navbar-background-color"] == "transparent"
-        assert engine["frosted-glass-popup-surface"] == engine["primary-background-color"]
+        assert (
+            engine["frosted-glass-popup-surface"] == engine["primary-background-color"]
+        )
         card_styles = yaml.safe_load(engine["card-mod-card-yaml"])
-        assert not re.search(r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."])
+        assert not re.search(
+            r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."]
+        )
 
 
 def test_background_url_is_escaped_for_css_and_yaml() -> None:
@@ -133,8 +166,10 @@ def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
             for child in value.values():
                 check_style(child)
             return
-        rendered = Environment(undefined=StrictUndefined).from_string(value).render(
-            config={}, is_state=lambda entity, state: False
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(value)
+            .render(config={}, is_state=lambda entity, state: False)
         )
         css = re.sub(r"/\*.*?\*/", "", rendered, flags=re.DOTALL)
         assert not re.search(r"^\s*#|;\s+#", css, flags=re.MULTILINE)
@@ -152,7 +187,9 @@ def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
                 for key, value in section.items():
                     if not key.startswith("card-mod-") or key == "card-mod-theme":
                         continue
-                    check_style(yaml.safe_load(value) if key.endswith("-yaml") else value)
+                    check_style(
+                        yaml.safe_load(value) if key.endswith("-yaml") else value
+                    )
 
 
 def test_state_template_tracks_entity_and_guards_missing_config() -> None:
@@ -162,7 +199,9 @@ def test_state_template_tracks_entity_and_guards_missing_config() -> None:
             source = yaml.safe_load(values["card-mod-card-yaml"])["."]
             template = Environment(undefined=StrictUndefined).from_string(source)
             for config in ({}, None, {"entity": None}, {"entity": ["fan.test"]}):
-                css = template.render(config=config, is_state=lambda entity, state: False)
+                css = template.render(
+                    config=config, is_state=lambda entity, state: False
+                )
                 fan_rule = re.search(
                     r":host\(mushroom-fan-card\).*?animation: ([^;]+);", css, re.DOTALL
                 )
@@ -171,22 +210,27 @@ def test_state_template_tracks_entity_and_guards_missing_config() -> None:
                 for state in ("on", "off", "unavailable"):
                     css = template.render(
                         config={"entity": f"{domain}.test"},
-                        is_state=lambda entity, expected, current=state: expected == current,
+                        is_state=lambda entity, expected, current=state: (
+                            expected == current
+                        ),
                     )
                     if domain == "fan":
                         expected = (
                             "frosted-glass-fan-spin 4s linear infinite"
-                            if state == "on" else "none"
+                            if state == "on"
+                            else "none"
                         )
                         fan_rule = re.search(
                             r":host\(mushroom-fan-card\).*?animation: ([^;]+);",
-                            css, re.DOTALL,
+                            css,
+                            re.DOTALL,
                         )
                         assert fan_rule and fan_rule.group(1) == expected
                     else:
                         expected = (
                             "var(--frosted-glass-light-glow)"
-                            if state == "on" else "0 0 0 0 transparent"
+                            if state == "on"
+                            else "0 0 0 0 transparent"
                         )
                         assert f"--frosted-glass-entity-light-glow: {expected};" in css
 

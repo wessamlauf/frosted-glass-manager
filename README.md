@@ -40,7 +40,9 @@ Do not install both engines at the same time.
 
 Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility audit](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/docs/compatibility-audit.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
 
-Mushroom fan/light feedback uses the engine's existing Home Assistant template subscription for `config.entity`, so it updates without polling. Modern popup hooks add backdrop blur and a translucent Full surface where supported. Legacy dialogs and engines without the matching adaptive hook use an opaque fallback. Settings, sidebar and topbar share the warm light or blue-purple dark palette.
+Standard Tile fans and Mushroom fan/light feedback follow entity state, including inline fan-speed controls. Active lights use a subtle orange glow; normal per-card shadows and borders can override it. Navbar host defaults are overridden even when its native styles are adopted, while explicitly configured public navbar variables are preserved. Corner highlights are painted on the visible card surface.
+
+Full popup hooks add blur and a translucent surface to both modern Web Awesome and legacy MWC dialogs. Legacy blur sits on a separate background layer so fixed-position dropdowns stay aligned. Lite popups remain opaque without blur. Settings, sidebar and topbar share the warm light base or the nearly black blue dark base (`#02060B`) with cool blue/slate accents. The dark default accent and Reset option now use `122, 162, 190`; saved custom colors are preserved. Tonal palettes keep the exact selected primary and increase consistently in lightness.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.

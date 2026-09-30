@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 DEFAULT_LIGHT_RGB = "106, 116, 211"
-DEFAULT_DARK_RGB = "106, 116, 211"
+DEFAULT_DARK_RGB = "122, 162, 190"
 
 DEFAULT_PALETTE = {
     "05": "#0D0E19",
@@ -73,32 +73,29 @@ def generate_hex_palette(rgb_value: str | Sequence[int]) -> dict[str, str]:
     hue, lightness, saturation = colorsys.rgb_to_hls(
         red / 255.0, green / 255.0, blue / 255.0
     )
-    lightness_levels = {
-        "05": 0.05,
-        "10": 0.10,
-        "20": 0.20,
-        "30": 0.30,
-        "40": 0.40,
-        "50": lightness,
-        "60": 0.60,
-        "70": 0.70,
-        "80": 0.80,
-        "90": 0.90,
-        "95": 0.96,
-    }
-
     palette = {}
-    for level, target_lightness in lightness_levels.items():
+    for level in ("05", "10", "20", "30", "40", "50", "60", "70", "80", "90", "95"):
+        tone = int(level)
+        # Anchor both halves at the selected primary. A fixed 60% lightness
+        # made tone 60 darker than tone 50 for a bright custom accent.
+        target_lightness = (
+            lightness * tone / 50
+            if tone <= 50
+            else lightness + (1 - lightness) * (tone - 50) / 50
+        )
         new_red, new_green, new_blue = colorsys.hls_to_rgb(
             hue, target_lightness, saturation
         )
         channels = (
-            max(0, min(255, int(new_red * 255))),
-            max(0, min(255, int(new_green * 255))),
-            max(0, min(255, int(new_blue * 255))),
+            max(0, min(255, round(new_red * 255))),
+            max(0, min(255, round(new_green * 255))),
+            max(0, min(255, round(new_blue * 255))),
         )
         palette[level] = "#{:02X}{:02X}{:02X}".format(*channels)
     return palette
+
+
+DEFAULT_DARK_PALETTE = generate_hex_palette(DEFAULT_DARK_RGB)
 
 
 def _replace_mode_values(
@@ -118,9 +115,13 @@ def _replace_mode_values(
     )
     yaml_background = css_background.replace("\\", "\\\\").replace('"', '\\"')
     result = content.replace(default_rgb, primary)
-    palette = generate_hex_palette(primary)
-    for level, old_hex in DEFAULT_PALETTE.items():
-        result = result.replace(old_hex, palette[level])
+    defaults = (
+        DEFAULT_DARK_PALETTE if default_rgb == DEFAULT_DARK_RGB else DEFAULT_PALETTE
+    )
+    palette = defaults if primary == default_rgb else generate_hex_palette(primary)
+    substitutions = {old_hex: palette[level] for level, old_hex in defaults.items()}
+    pattern = re.compile("|".join(re.escape(value) for value in substitutions))
+    result = pattern.sub(lambda match: substitutions[match.group()], result)
     # Insert user content last so palette substitution cannot change a URL
     # containing one of the template's hexadecimal color strings.
     return result.replace(default_background, yaml_background)
