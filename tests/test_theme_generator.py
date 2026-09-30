@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from jinja2 import Environment, StrictUndefined
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = (
@@ -76,13 +77,16 @@ def test_rendered_full_theme_is_self_contained() -> None:
         assert "card-mod-card-yaml" in engine
         assert "card-mod-root" in engine
         assert engine["ha-dialog-surface-backdrop-filter"] == "none"
+        assert engine["ha-dialog-scrim-backdrop-filter"] == "none"
         card_styles = yaml.safe_load(engine["card-mod-card-yaml"])
         assert "prefers-reduced-motion: reduce" in card_styles["."]
-        assert "mushroom-shape-icon $" in card_styles
+        assert "is_state(entity, 'on')" in card_styles["."]
         assert "card-mod-sidebar" in engine
         assert "card-mod-drawer" in engine
+        assert "card-mod-more-info-yaml" in engine
         assert engine["frosted-glass-navbar-primary"] == "var(--navbar-primary-color)"
-        assert engine["ha-card-background"] == "var(--ha-card-glass-tint)"
+        assert engine["ha-card-background"] == "transparent"
+        assert engine["ha-card-glass-tint"] == "transparent"
 
 
 def test_lite_theme_disables_backdrop_filter() -> None:
@@ -90,12 +94,21 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         _template("frosted_glass_lite.yaml"), GENERATOR.ThemeSettings()
     )
     themes = yaml.safe_load(rendered)
-    light_engine = themes["Frosted Glass Custom Light Lite"]
-    assert light_engine["ha-card-backdrop-filter"] == "none"
-    assert light_engine["sidebar-backdrop-filter"] == "none"
-    assert light_engine["navbar-backdrop-filter"] == "none"
-    card_styles = yaml.safe_load(light_engine["card-mod-card-yaml"])
-    assert not re.search(r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."])
+    for mode in ("Light", "Dark"):
+        engine = themes[f"Frosted Glass Custom {mode} Lite"]
+        for key in (
+            "ha-card-backdrop-filter",
+            "sidebar-backdrop-filter",
+            "navbar-backdrop-filter",
+            "frosted-glass-popup-backdrop-filter",
+        ):
+            assert engine[key] == "none"
+        assert engine["ha-card-background"] == "transparent"
+        assert engine["bubble-main-background-color"] == "transparent"
+        assert engine["navbar-background-color"] == "transparent"
+        assert engine["frosted-glass-popup-surface"] == engine["primary-background-color"]
+        card_styles = yaml.safe_load(engine["card-mod-card-yaml"])
+        assert not re.search(r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."])
 
 
 def test_background_url_is_escaped_for_css_and_yaml() -> None:
@@ -120,7 +133,10 @@ def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
             for child in value.values():
                 check_style(child)
             return
-        css = re.sub(r"/\*.*?\*/", "", value, flags=re.DOTALL)
+        rendered = Environment(undefined=StrictUndefined).from_string(value).render(
+            config={}, is_state=lambda entity, state: False
+        )
+        css = re.sub(r"/\*.*?\*/", "", rendered, flags=re.DOTALL)
         assert not re.search(r"^\s*#|;\s+#", css, flags=re.MULTILINE)
         assert css.count("{") == css.count("}")
 
@@ -137,6 +153,42 @@ def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
                     if not key.startswith("card-mod-") or key == "card-mod-theme":
                         continue
                     check_style(yaml.safe_load(value) if key.endswith("-yaml") else value)
+
+
+def test_state_template_tracks_entity_and_guards_missing_config() -> None:
+    for name in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
+        combined = next(iter(yaml.safe_load(_template(name)).values()))
+        for values in combined["modes"].values():
+            source = yaml.safe_load(values["card-mod-card-yaml"])["."]
+            template = Environment(undefined=StrictUndefined).from_string(source)
+            for config in ({}, None, {"entity": None}, {"entity": ["fan.test"]}):
+                css = template.render(config=config, is_state=lambda entity, state: False)
+                fan_rule = re.search(
+                    r":host\(mushroom-fan-card\).*?animation: ([^;]+);", css, re.DOTALL
+                )
+                assert fan_rule and fan_rule.group(1) == "none"
+            for domain in ("fan", "light"):
+                for state in ("on", "off", "unavailable"):
+                    css = template.render(
+                        config={"entity": f"{domain}.test"},
+                        is_state=lambda entity, expected, current=state: expected == current,
+                    )
+                    if domain == "fan":
+                        expected = (
+                            "frosted-glass-fan-spin 4s linear infinite"
+                            if state == "on" else "none"
+                        )
+                        fan_rule = re.search(
+                            r":host\(mushroom-fan-card\).*?animation: ([^;]+);",
+                            css, re.DOTALL,
+                        )
+                        assert fan_rule and fan_rule.group(1) == expected
+                    else:
+                        expected = (
+                            "var(--frosted-glass-light-glow)"
+                            if state == "on" else "0 0 0 0 transparent"
+                        )
+                        assert f"--frosted-glass-entity-light-glow: {expected};" in css
 
 
 def test_render_and_write_themes_creates_directory_atomically(tmp_path: Path) -> None:
