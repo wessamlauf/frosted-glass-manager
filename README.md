@@ -14,7 +14,7 @@
 ## ✨ Features
 
 - **UI Color Picker**: Change the **Primary Color** for both Light and Dark modes using a visual picker. No more editing code! 🎨
-- **Smart Tonal Palette**: This isn't just a simple color swap. The manager mathematically calculates a complete **Material Design tonal palette** (shades 05–95) based on your chosen color. This ensures text remains readable and contrast stays perfect. 🧠
+- **Tonal Palette**: The manager calculates light and dark shades (05–95) from your chosen accent. Text colors keep the theme's light/dark contrast profile. 🧠
 - **Custom Backgrounds**: Easily paste a URL for your custom background images. 🖼️
 - **Dual Generation**: With a single click, the manager generates two themes:
     1.  **Frosted Glass Custom**: The full experience with blur and glass effects. ❄️
@@ -22,6 +22,8 @@
 - **Instant Updates**: Changes are applied immediately without needing to restart Home Assistant. 🚀
 - **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
 - **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
+- **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown, sidebar and state-animation compatibility as the base theme.
+- **Theme 1.5.0 Templates**: Full and Lite outputs share the base theme's native surfaces, readable legacy/current menus, smaller badge shadows and reduced-motion support.
 - **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
 ---
@@ -35,6 +37,8 @@
   - [`card-mod`](https://github.com/thomasloven/lovelace-card-mod), if you prefer to keep your current setup.
 
 Do not install both engines at the same time.
+
+Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility audit](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/docs/compatibility-audit.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.

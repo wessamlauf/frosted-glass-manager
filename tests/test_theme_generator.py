@@ -9,7 +9,6 @@ from pathlib import Path
 
 import yaml
 
-
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = (
     ROOT / "custom_components" / "frosted_glass_manager" / "theme_generator.py"
@@ -63,6 +62,8 @@ def test_rendered_full_theme_is_self_contained() -> None:
     )
     assert combined["modes"]["light"]["primary-color"] == "rgb(12, 34, 56)"
     assert combined["modes"]["dark"]["primary-color"] == "rgb(78, 90, 123)"
+    assert combined["modes"]["light"]["bubble-accent-color"] == "rgb(12, 34, 56)"
+    assert combined["modes"]["dark"]["navbar-primary-color"] == "rgb(78, 90, 123)"
 
     for mode, engine_name in (
         ("light", "Frosted Glass Custom Light"),
@@ -72,20 +73,57 @@ def test_rendered_full_theme_is_self_contained() -> None:
         assert engine["card-mod-theme"] == engine_name
         assert engine["uix-theme"] == engine_name
         assert engine["modes"][mode]
-        assert "card-mod-card" in engine
+        assert "card-mod-card-yaml" in engine
         assert "card-mod-root" in engine
+        assert engine["ha-dialog-surface-backdrop-filter"] == "none"
+        card_styles = yaml.safe_load(engine["card-mod-card-yaml"])
+        assert "prefers-reduced-motion: reduce" in card_styles["."]
+        assert "mushroom-shape-icon $" in card_styles
+        assert "card-mod-sidebar" in engine
+        assert "card-mod-drawer" in engine
+        assert engine["frosted-glass-navbar-primary"] == "var(--navbar-primary-color)"
+        assert engine["ha-card-background"] == "var(--ha-card-glass-tint)"
 
 
-def test_lite_theme_omits_backdrop_filter() -> None:
+def test_lite_theme_disables_backdrop_filter() -> None:
     rendered = GENERATOR.render_theme(
         _template("frosted_glass_lite.yaml"), GENERATOR.ThemeSettings()
     )
     themes = yaml.safe_load(rendered)
     light_engine = themes["Frosted Glass Custom Light Lite"]
-    assert "backdrop-filter:" not in light_engine["card-mod-card"]
+    assert light_engine["ha-card-backdrop-filter"] == "none"
+    assert light_engine["sidebar-backdrop-filter"] == "none"
+    assert light_engine["navbar-backdrop-filter"] == "none"
+    card_styles = yaml.safe_load(light_engine["card-mod-card-yaml"])
+    assert not re.search(r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."])
+
+
+def test_background_url_is_escaped_for_css_and_yaml() -> None:
+    settings = GENERATOR.ThemeSettings(
+        light_primary="12, 34, 56",
+        light_background='https://example.com/image.png?label=O\'Reilly&token="abc"#6A74D3',
+        dark_background="https://example.com/path\\image.png",
+    )
+    themes = yaml.safe_load(
+        GENERATOR.render_theme(_template("frosted_glass.yaml"), settings)
+    )
+    modes = themes["Frosted Glass Custom"]["modes"]
+    assert "O\\'Reilly" in modes["light"]["background-image"]
+    assert 'token="abc"' in modes["light"]["background-image"]
+    assert "#6A74D3" in modes["light"]["background-image"]
+    assert "path\\\\image.png" in modes["dark"]["background-image"]
 
 
 def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
+    def check_style(value: str | dict) -> None:
+        if isinstance(value, dict):
+            for child in value.values():
+                check_style(child)
+            return
+        css = re.sub(r"/\*.*?\*/", "", value, flags=re.DOTALL)
+        assert not re.search(r"^\s*#|;\s+#", css, flags=re.MULTILINE)
+        assert css.count("{") == css.count("}")
+
     for template_name in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
         themes = yaml.safe_load(
             GENERATOR.render_theme(_template(template_name), GENERATOR.ThemeSettings())
@@ -98,9 +136,7 @@ def test_embedded_css_has_balanced_rules_and_no_yaml_comments() -> None:
                 for key, value in section.items():
                     if not key.startswith("card-mod-") or key == "card-mod-theme":
                         continue
-                    css = re.sub(r"/\*.*?\*/", "", value, flags=re.DOTALL)
-                    assert not re.search(r"^\s*#|;\s+#", css, flags=re.MULTILINE)
-                    assert css.count("{") == css.count("}")
+                    check_style(yaml.safe_load(value) if key.endswith("-yaml") else value)
 
 
 def test_render_and_write_themes_creates_directory_atomically(tmp_path: Path) -> None:

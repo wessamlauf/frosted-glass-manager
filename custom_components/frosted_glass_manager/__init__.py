@@ -25,7 +25,6 @@ from .const import (
 )
 from .theme_generator import ThemeSettings, normalize_rgb, render_and_write_themes
 
-
 _LOGGER = logging.getLogger(__name__)
 
 

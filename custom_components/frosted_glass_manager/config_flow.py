@@ -8,16 +8,16 @@ from homeassistant.core import callback
 from homeassistant.helpers import selector
 
 from .const import (
-    DOMAIN,
-    CONF_LIGHT_PRIMARY,
-    CONF_LIGHT_BG,
-    CONF_DARK_PRIMARY,
     CONF_DARK_BG,
+    CONF_DARK_PRIMARY,
+    CONF_LIGHT_BG,
+    CONF_LIGHT_PRIMARY,
     CONF_RESET,
-    DEFAULT_LIGHT_RGB,
+    DEFAULT_DARK_BG_URL,
     DEFAULT_DARK_RGB,
     DEFAULT_LIGHT_BG_URL,
-    DEFAULT_DARK_BG_URL,
+    DEFAULT_LIGHT_RGB,
+    DOMAIN,
 )
 from .theme_generator import normalize_rgb
 

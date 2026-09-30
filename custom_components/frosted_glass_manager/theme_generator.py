@@ -10,7 +10,6 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-
 DEFAULT_LIGHT_RGB = "106, 116, 211"
 DEFAULT_DARK_RGB = "106, 116, 211"
 
@@ -109,13 +108,22 @@ def _replace_mode_values(
     default_background: str,
     background: str,
 ) -> str:
-    result = content.replace(default_rgb, primary).replace(
-        default_background, background
+    # The URL sits inside a single-quoted CSS url(), itself inside a
+    # double-quoted YAML scalar. Escape both layers independently.
+    css_background = (
+        background.replace("\\", "\\\\")
+        .replace("'", "\\'")
+        .replace("\r", "\\d ")
+        .replace("\n", "\\a ")
     )
+    yaml_background = css_background.replace("\\", "\\\\").replace('"', '\\"')
+    result = content.replace(default_rgb, primary)
     palette = generate_hex_palette(primary)
     for level, old_hex in DEFAULT_PALETTE.items():
         result = result.replace(old_hex, palette[level])
-    return result
+    # Insert user content last so palette substitution cannot change a URL
+    # containing one of the template's hexadecimal color strings.
+    return result.replace(default_background, yaml_background)
 
 
 def _extract_mode_body(content: str, mode: str) -> str:
