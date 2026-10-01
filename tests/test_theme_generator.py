@@ -144,6 +144,10 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         )
         assert engine["bubble-pop-up-main-background-color"] == "var(--frosted-glass-popup-surface)"
         assert engine["bubble-backdrop-filter"] == "none"
+        assert engine["sidebar-background-color"] == "transparent"
+        assert engine["app-header-background-color"] == "transparent"
+        assert engine["app-header-backdrop-filter"] == "none"
+        assert "var(--ha-card-glass-inset-shadow)" in engine["frosted-glass-badge-shadow"]
         card_styles = {".": engine["card-mod-card"]}
         assert not re.search(
             r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."]
