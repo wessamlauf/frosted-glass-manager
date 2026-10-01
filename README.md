@@ -22,7 +22,7 @@
 - **Instant Updates**: Changes are applied immediately without needing to restart Home Assistant. 🚀
 - **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
 - **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
-- **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown, sidebar and state-animation compatibility as the base theme.
+- **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown and sidebar compatibility as the base theme.
 - **Theme 1.5.0 Templates**: Full and Lite outputs use transparent card backgrounds and the original glass corner highlights. Full adds blur; Lite popup surfaces stay fully opaque without blur.
 - **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
@@ -40,9 +40,13 @@ Do not install both engines at the same time.
 
 Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility audit](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/docs/compatibility-audit.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
 
-Standard Tile fans and Mushroom fan/light feedback follow entity state, including inline fan-speed controls. Active lights use a subtle orange glow; normal per-card shadows and borders can override it. Navbar host defaults are overridden even when its native styles are adopted, while explicitly configured public navbar variables are preserved. Corner highlights are painted on the visible card surface.
+Automatic fan rotation and light glow have been removed. Static card CSS applies without backend templates or a nested styling-YAML parser; normal per-card shadows and borders remain available. Navbar's native solid background dependency is scoped to the transparent card base, while its public background variable stays configurable. Corner highlights remain on the visible card surface.
 
-Full popup hooks add blur and a translucent surface to both modern Web Awesome and legacy MWC dialogs. Legacy blur sits on a separate background layer so fixed-position dropdowns stay aligned. Lite popups remain opaque without blur. Settings, sidebar and topbar share the warm light base or the nearly black blue dark base (`#02060B`) with cool blue/slate accents. The dark default accent and Reset option now use `122, 162, 190`; saved custom colors are preserved. Tonal palettes keep the exact selected primary and increase consistently in lightness.
+Full modern popups use native HA variables for 35% opacity and 18px blur, including adaptive desktop dialogs and mobile bottom sheets. No popup engine hook is required. HACS's legacy frontend falls back to opaque, unfiltered dialogs so fixed-position dropdowns stay aligned. Lite popups, sidebar and topbar remain solid with no blur; Full sidebar/topbar use alpha 0.10.
+
+Settings and interface surfaces share the warm light base or nearly black blue dark base (`#02060B`) with cool blue/slate accents. The dark default accent and Reset option use `122, 162, 190`; saved custom colors are preserved. Tonal palettes keep the exact selected primary and increase consistently in lightness.
+
+After updating this integration, reload it or save its options to regenerate the Custom theme files, then reload the frontend. Updating the base theme alone does not change previously generated Custom files.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.
