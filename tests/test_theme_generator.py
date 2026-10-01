@@ -119,6 +119,7 @@ def test_rendered_full_theme_is_self_contained() -> None:
         assert "var(--ha-color-neutral-50)" in engine["ha-dialog-surface-background"]
         assert engine["ha-card-background"] == "transparent"
         assert engine["ha-card-glass-tint"] == "transparent"
+        assert engine["bubble-pop-up-main-background-color"] == "var(--frosted-glass-popup-surface)"
 
 
 def test_lite_theme_disables_backdrop_filter() -> None:
@@ -141,6 +142,8 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         assert (
             engine["frosted-glass-popup-surface"] == engine["primary-background-color"]
         )
+        assert engine["bubble-pop-up-main-background-color"] == "var(--frosted-glass-popup-surface)"
+        assert engine["bubble-backdrop-filter"] == "none"
         card_styles = {".": engine["card-mod-card"]}
         assert not re.search(
             r"(?<![\w-])(?:-webkit-)?backdrop-filter\s*:", card_styles["."]

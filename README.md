@@ -42,7 +42,7 @@ Load the selected engine as a frontend module according to its installation inst
 
 Automatic fan rotation and light glow have been removed. Static card CSS applies without backend templates or a nested styling-YAML parser; normal per-card shadows and borders remain available. Navbar's native solid background dependency is scoped to the transparent card base, while its public background variable stays configurable. Corner highlights remain on the visible card surface.
 
-Full modern popups use native HA variables for 35% opacity and 18px blur, including adaptive desktop dialogs and mobile bottom sheets. No popup engine hook is required. HACS's legacy frontend falls back to opaque, unfiltered dialogs so fixed-position dropdowns stay aligned. Lite popups, sidebar and topbar remain solid with no blur; Full sidebar/topbar use alpha 0.10.
+Full modern popups use native HA variables for 35% opacity and 18px blur, including adaptive desktop dialogs and mobile bottom sheets. No popup engine hook is required. HACS's legacy frontend falls back to opaque, unfiltered dialogs so fixed-position dropdowns stay aligned. Lite popups, sidebar and topbar remain solid with no blur; Full sidebar/topbar use alpha 0.10. Bubble popups inherit the same surface; Full preserves their native blur configuration, while Lite disables their popup and backdrop blur.
 
 Settings and interface surfaces share the warm light base or nearly black blue dark base (`#02060B`) with cool blue/slate accents. The dark default accent and Reset option use `122, 162, 190`; saved custom colors are preserved. Tonal palettes keep the exact selected primary and increase consistently in lightness.
 
