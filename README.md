@@ -23,7 +23,7 @@
 - **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
 - **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
 - **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown and sidebar compatibility as the base theme.
-- **Theme 1.5.0 Templates**: Full and Lite outputs use transparent card backgrounds and the original glass corner highlights. Full adds blur; Lite popup surfaces stay fully opaque without blur.
+- **Theme 1.4.0 Templates**: Full and Lite outputs use transparent card backgrounds and the original glass corner highlights. Full adds blur; Lite popup surfaces stay fully opaque without blur.
 - **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
 ---
