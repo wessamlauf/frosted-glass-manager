@@ -14,12 +14,17 @@
 ## ✨ Features
 
 - **UI Color Picker**: Change the **Primary Color** for both Light and Dark modes using a visual picker. No more editing code! 🎨
-- **Smart Tonal Palette**: This isn't just a simple color swap. The manager mathematically calculates a complete **Material Design tonal palette** (shades 05–95) based on your chosen color. This ensures text remains readable and contrast stays perfect. 🧠
+- **Tonal Palette**: The manager calculates light and dark shades (05–95) from your chosen accent. Text colors keep the theme's light/dark contrast profile. 🧠
 - **Custom Backgrounds**: Easily paste a URL for your custom background images. 🖼️
 - **Dual Generation**: With a single click, the manager generates two themes:
     1.  **Frosted Glass Custom**: The full experience with blur and glass effects. ❄️
     2.  **Frosted Glass Custom Lite**: A performance-optimized version for older devices (no blur). ⚡
 - **Instant Updates**: Changes are applied immediately without needing to restart Home Assistant. 🚀
+- **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
+- **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
+- **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown and sidebar compatibility as the base theme.
+- **Theme 1.5.0 Templates**: Full and Lite outputs use transparent card backgrounds and the original glass corner highlights. Full adds blur; Lite popup surfaces stay fully opaque without blur.
+- **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
 ---
 
@@ -27,7 +32,21 @@
 
 **Step 1: Prerequisites**
 - You must have [HACS](https://hacs.xyz/) installed.
-- You must have the [`card-mod`](https://github.com/thomasloven/lovelace-card-mod) integration installed (required for the glass effects to work).
+- Install exactly one styling engine through HACS:
+  - [`UIX`](https://github.com/Lint-Free-Technology/uix), the actively developed successor to card-mod. It supports the existing card-mod theme keys used here.
+  - [`card-mod`](https://github.com/thomasloven/lovelace-card-mod), if you prefer to keep your current setup.
+
+Do not install both engines at the same time.
+
+Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility audit](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/docs/compatibility-audit.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
+
+Automatic fan rotation and light glow have been removed. Static card CSS applies without backend templates or a nested styling-YAML parser; normal per-card shadows and borders remain available. Navbar's native solid background dependency is scoped to the transparent card base, while its public background variable stays configurable. Full paints corner highlights on the blur layer so the filter cannot soften them; Lite keeps the same reflections without blur. Badges combine the highlights with a smaller depth shadow and retain a single native filter.
+
+Full modern popups use native HA variables for 35% opacity and 18px blur, including adaptive desktop dialogs and mobile bottom sheets. No popup engine hook is required. HACS's legacy frontend falls back to opaque, unfiltered dialogs so fixed-position dropdowns stay aligned. Lite sidebar and topbar backgrounds are fully transparent without blur, while Lite popups remain solid. Full sidebar/topbar use alpha 0.10. Bubble popups inherit the same surface; Full preserves their native blur configuration, while Lite disables their popup and backdrop blur.
+
+Settings and interface surfaces share the warm light base or nearly black blue dark base (`#02060B`) with cool blue/slate accents. The dark default accent and Reset option use `122, 162, 190`; saved custom colors are preserved. Tonal palettes keep the exact selected primary and increase consistently in lightness.
+
+After updating this integration, reload it or save its options to regenerate the Custom theme files, then reload the frontend. Updating the base theme alone does not change previously generated Custom files.
 
 **Step 2: Install via HACS**
 1. Open HACS -> Integrations.
@@ -62,11 +81,11 @@ Once installed and restarted, you need to add the integration to your instance:
     * **Dark Mode Background URL**
 3. Click **SUBMIT**.
 
-The integration will automatically generate two new files in your `themes/` folder: `Frosted Glass Custom.yaml` and `Frosted Glass Custom Lite.yaml`.
+The integration automatically and atomically generates two files in your `themes/` folder: `Frosted Glass Custom.yaml` and `Frosted Glass Custom Lite.yaml`. Each file also contains its required light and dark engine themes, so no second theme package is needed.
 
 ### Activating the Theme:
 1. Go to your **Profile** (click your name in the bottom-left corner).
-2. Under **Theme**, select either **Frosted Glass Custom** or **Frosted Glass Custom Lite**.
+2. Under **Theme**, select **Frosted Glass Custom** or **Frosted Glass Custom Lite**. The generated single-mode variants are also available when you want to force light or dark mode.
 
 ---
 
