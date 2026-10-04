@@ -23,6 +23,7 @@
 - **Self-Contained Output**: Generated files now include their own light and dark styling-engine themes. The separate Frosted Glass theme repository is not required.
 - **Home Assistant 2026.8 Ready**: Generated YAML uses valid non-empty mode declarations and current form, switch and shape tokens.
 - **Custom-card Profiles**: Generated themes carry the same Bubble Card, Navbar Card, stack-in-card, Mushroom, dropdown and sidebar compatibility as the base theme.
+- **Bubble Customization**: Native state colors, custom `styles:` and per-card CSS variables work alongside the glass effect. Icons and 36px sub-buttons are circular by default.
 - **Theme 1.4.0 Templates**: Full and Lite outputs use transparent card backgrounds and the original glass corner highlights. Full adds blur; Lite popup surfaces stay fully opaque without blur.
 - **UIX and card-mod Support**: Choose either styling engine without changing your dashboards.
 
@@ -38,7 +39,7 @@
 
 Do not install both engines at the same time.
 
-Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility audit](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/docs/compatibility-audit.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
+Load the selected engine as a frontend module according to its installation instructions to style the sidebar and drawer on Settings and other non-Lovelace panels. Select the generated theme in your profile for interface-wide styling. See the base theme's [compatibility notes](https://github.com/wessamlauf/homeassistant-frosted-glass-themes/blob/main/README.md) for card-specific behavior; Simple Swipe Card needs `enable_backdrop_filter: true` when using blur.
 
 Automatic fan rotation and light glow have been removed. Static card CSS applies without backend templates or a nested styling-YAML parser; normal per-card shadows and borders remain available. Navbar's native solid background dependency is scoped to the transparent card base, while its public background variable stays configurable. Full paints corner highlights on the blur layer so the filter cannot soften them; Lite keeps the same reflections without blur. Badges combine the highlights with a smaller depth shadow and retain a single native filter.
 

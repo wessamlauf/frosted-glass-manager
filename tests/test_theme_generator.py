@@ -154,6 +154,48 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         )
 
 
+def test_bubble_profiles_follow_custom_accents_and_keep_round_controls() -> None:
+    settings = GENERATOR.ThemeSettings(
+        light_primary="12, 34, 56", dark_primary="34, 56, 178"
+    )
+    for filename in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
+        themes = yaml.safe_load(GENERATOR.render_theme(_template(filename), settings))
+        suffix = " Lite" if "lite" in filename else ""
+        for mode, primary in (("Light", "12, 34, 56"), ("Dark", "34, 56, 178")):
+            engine = themes[f"Frosted Glass Custom {mode}{suffix}"]
+            assert engine["bubble-accent-color"] == f"rgb({primary})"
+            assert engine["bubble-main-background-color"] == "transparent"
+            assert engine["bubble-icon-border-radius"] == "50%"
+            assert engine["bubble-sub-button-border-radius"] == "18px"
+
+
+def test_orange_accent_reaches_controls_and_the_entire_tonal_palette() -> None:
+    primary = "255, 149, 0"
+    settings = GENERATOR.ThemeSettings(light_primary=primary, dark_primary=primary)
+    palette = GENERATOR.generate_hex_palette(primary)
+    for filename in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
+        themes = yaml.safe_load(GENERATOR.render_theme(_template(filename), settings))
+        suffix = " Lite" if "lite" in filename else ""
+        for mode in ("Light", "Dark"):
+            engine = themes[f"Frosted Glass Custom {mode}{suffix}"]
+            for variable in (
+                "primary-color",
+                "accent-color",
+                "bubble-accent-color",
+                "navbar-primary-color",
+                "control-button-background-color",
+                "ha-switch-checked-thumb-background-color",
+                "simple-swipe-card-pagination-dot-active-color",
+            ):
+                assert engine[variable] == f"rgb({primary})"
+            assert primary in engine["btn-bg-color-on"]
+            assert primary in engine["ha-switch-checked-background-color"]
+            for tone, value in palette.items():
+                assert engine[f"ha-color-primary-{tone}"] == value
+                assert engine[f"color-primary-{tone}"] == value
+            assert f"--token-rgb-primary: {primary};" in engine["card-mod-root"]
+
+
 def test_background_url_is_escaped_for_css_and_yaml() -> None:
     settings = GENERATOR.ThemeSettings(
         light_primary="12, 34, 56",
