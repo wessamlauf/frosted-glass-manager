@@ -154,6 +154,21 @@ def test_lite_theme_disables_backdrop_filter() -> None:
         )
 
 
+def test_bubble_profiles_follow_custom_accents_and_keep_round_controls() -> None:
+    settings = GENERATOR.ThemeSettings(
+        light_primary="12, 34, 56", dark_primary="34, 56, 178"
+    )
+    for filename in ("frosted_glass.yaml", "frosted_glass_lite.yaml"):
+        themes = yaml.safe_load(GENERATOR.render_theme(_template(filename), settings))
+        suffix = " Lite" if "lite" in filename else ""
+        for mode, primary in (("Light", "12, 34, 56"), ("Dark", "34, 56, 178")):
+            engine = themes[f"Frosted Glass Custom {mode}{suffix}"]
+            assert engine["bubble-accent-color"] == f"rgb({primary})"
+            assert engine["bubble-main-background-color"] == "transparent"
+            assert engine["bubble-icon-border-radius"] == "50%"
+            assert engine["bubble-sub-button-border-radius"] == "18px"
+
+
 def test_background_url_is_escaped_for_css_and_yaml() -> None:
     settings = GENERATOR.ThemeSettings(
         light_primary="12, 34, 56",
